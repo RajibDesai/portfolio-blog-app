@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------
+   🎨 Base Layer (CSS variables, global reset, fonts)
+---------------------------------------------------- */
+@layer base {
+  /* 🔹 Custom CSS Variables */
+  :root {
+    --primary-color: #6366f1;      /* Indigo-500 */
+    --secondary-color: #ec4899;    /* Pink-500 */
+    --accent-color: #f59e0b;       /* Amber-500 */
+    --neutral-text: #374151;       /* Gray-700 */
+    --custom-background: #f9fafb;  /* Gray-50 */
+  }
+
+  /* 🌙 Dark Mode Variables */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --primary-color: #818cf8;      /* Indigo-400 */
+      --secondary-color: #f472b6;    /* Pink-400 */
+      --accent-color: #fbbf24;       /* Amber-400 */
+      --neutral-text: #d1d5db;       /* Gray-300 */
+      --custom-background: #111827;  /* Gray-900 */
+    }
+  }
+
+  /* 🔹 Global body style */
+  body {
+    font-family: var(--font-roboto), sans-serif;
+    color: var(--neutral-text);
+    background-color: var(--custom-background);
+  }
+
+  /* 🔹 Utility for Poppins font */
+  .font-poppins {
+    font-family: var(--font-poppins), sans-serif;
+  }
+}
+
+/* ---------------------------------------------------
+   🎨 Utilities Layer (custom Tailwind-style classes)
+---------------------------------------------------- */
+@layer utilities {
+  /* --- Text Colors --- */
+  .text-primary    { color: var(--primary-color); }
+  .text-secondary  { color: var(--secondary-color); }
+  .text-accent     { color: var(--accent-color); }
+  .text-neutral    { color: var(--neutral-text); }
+
+  /* --- Background Colors --- */
+  .bg-primary      { background-color: var(--primary-color); }
+  .bg-secondary    { background-color: var(--secondary-color); }
+  .bg-accent       { background-color: var(--accent-color); }
+  .bg-neutral      { background-color: var(--neutral-text); }
+
+  /* --- Border Colors --- */
+  .border-primary   { border-color: var(--primary-color); }
+  .border-secondary { border-color: var(--secondary-color); }
+
+  /* --- Hover states --- */
+  .hover\:text-primary:hover     { color: var(--primary-color); }
+  .hover\:text-secondary:hover   { color: var(--secondary-color); }
+  .hover\:bg-primary:hover       { background-color: var(--primary-color); }
+  .hover\:bg-secondary:hover     { background-color: var(--secondary-color); }
+  .hover\:border-primary:hover   { border-color: var(--primary-color); }
+
+  /* --- Focus states --- */
+  .focus\:text-primary:focus   { color: var(--primary-color); }
+  .focus\:text-secondary:focus { color: var(--secondary-color); }
+  .focus\:text-accent:focus    { color: var(--accent-color); }
+  .focus\:bg-primary:focus     { background-color: var(--primary-color); }
+  .focus\:border-primary:focus { border-color: var(--primary-color); }
+
+  /* --- Active states --- */
+  .active\:text-primary:active   { color: var(--primary-color); }
+  .active\:text-secondary:active { color: var(--secondary-color); }
+  .active\:bg-primary:active     { background-color: var(--primary-color); }
+  .active\:bg-secondary:active   { background-color: var(--secondary-color); }
+  .active\:border-primary:active { border-color: var(--primary-color); }
+}
