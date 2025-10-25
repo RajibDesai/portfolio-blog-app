@@ -1,3 +1,4 @@
+// frontend/src/app/(public)/blog/[id]/page.tsx
 import { IBlog } from '@/types';
 import Image from 'next/image';
 
