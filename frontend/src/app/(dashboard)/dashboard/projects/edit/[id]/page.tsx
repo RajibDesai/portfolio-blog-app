@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useParams , useRouter } from 'next/navigation';
 import axios, { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
+import Image from 'next/image';
 
 // فرمের ডেটাগুলোর জন্য একটি টাইপ তৈরি করা হলো
 type FormValues = {
@@ -110,7 +111,15 @@ export default function EditProjectPage() {
           <div>
             <label htmlFor="image" className="block font-medium">Change Project Image (Optional)</label>
             {/* বর্তমান ছবিটি প্রিভিউ হিসেবে দেখানো হচ্ছে */}
-            {currentImageUrl && <img src={currentImageUrl} alt="Current project" className="w-32 h-auto mt-2 rounded" />}
+            {currentImageUrl && (
+              <Image
+                src={currentImageUrl}
+                alt="Current project"
+                width={128}
+                height={128}
+                className="w-32 h-auto mt-2 rounded"
+              />
+             )}
             <input id="image" type="file" accept="image/*" {...register('image')} className="w-full p-2 border rounded mt-2" />
           </div>
 

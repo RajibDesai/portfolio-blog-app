@@ -1,3 +1,4 @@
+// frontend/src/app/public/projects/page.tsx
 import ProjectCard from '@/components/ProjectCard';
 import { IProject } from '@/types';
 

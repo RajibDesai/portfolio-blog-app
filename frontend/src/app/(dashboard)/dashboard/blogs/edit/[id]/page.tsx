@@ -9,7 +9,6 @@ type FormValues = {
   title: string;
   content: string;
   category: string;
-  // file ইনপুট: optional, কারণ হয়তো তুমি সব সময় ছবিতে কিছু আপডেট দাও না
   image?: FileList;
 };
 
@@ -18,7 +17,7 @@ export default function EditBlogPage() {
   const params = useParams();
   const id = params.id;
 
-  const { register, handleSubmit, control, reset, formState: { errors, isSubmitting } } = useForm<FormValues>({
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormValues>({
     defaultValues: {
       title: '',
       content: '',
