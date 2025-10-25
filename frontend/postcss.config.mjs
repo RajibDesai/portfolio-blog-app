@@ -7,7 +7,7 @@
 const config = {
   plugins: {
     "@tailwindcss/postcss": {},
-    autoprefixer: {},
+    autoprefixer: {}, // <-- autoprefixer এখানে অবশ্যই থাকতে হবে
   },
 };
 
