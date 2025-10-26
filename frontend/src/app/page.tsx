@@ -135,6 +135,7 @@
 //   );
 // }
 
+// // frontend/src/app/page.tsx
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
@@ -142,21 +143,28 @@ import { IProject } from '@/types';
 import ProjectCard from '@/components/ProjectCard';
 import AnimatedCard from "@/components/AnimatedCard";
 
-// API থেকে ডেটা আনার ফাংশন
+// ✅ ISR সক্রিয় (৬০ সেকেন্ড পর ব্যাকগ্রাউন্ডে রিজেনারেট)
+export const revalidate = 60;
+
+/**
+ * API থেকে ফিচারড প্রজেক্ট আনার ফাংশন (ISR সহ)
+ */
 async function getFeaturedProjects(): Promise<IProject[]> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects`, {
-      cache: 'no-store', // ডেভেলপমেন্টের জন্য cache বন্ধ রাখা ভালো
+      // ✅ এখন cache: 'no-store' নয়, ISR ব্যবহার করা হচ্ছে
+      next: { revalidate: 60 },
     });
+
     if (!res.ok) {
       throw new Error('Failed to fetch projects');
     }
+
     const projects = await res.json();
-    // এখানে আমরা প্রথম ৩টি প্রজেক্টকে ফিচারড হিসেবে দেখাব
-    return projects.slice(0, 3);
+    return projects.slice(0, 3); // শুধুমাত্র প্রথম ৩টি প্রজেক্ট ফিচারড
   } catch (error) {
-    console.error(error);
-    return []; // এরর হলে খালি অ্যারে রিটার্ন করবে
+    console.error('Error fetching featured projects:', error);
+    return [];
   }
 }
 
@@ -165,23 +173,24 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-16 py-2">
-      {/* Hero Section */}
+      {/* ✅ Hero Section */}
       <section className="text-center">
-         <div className="w-36 h-36 rounded-full overflow-hidden mx-auto">
-            <Image
-              src="/images/profile.jpg"
-              alt="Profile Picture"
-              width={150}
-              height={150}
-              className="object-cover"
-            />
-         </div>
-        <h1 className="text-4xl font-bold">Your Name</h1>
+        <div className="w-36 h-36 rounded-full overflow-hidden mx-auto">
+          <Image
+            src="/images/profile.jpg"
+            alt="Profile Picture"
+            width={150}
+            height={150}
+            className="object-cover"
+            priority
+          />
+        </div>
+        <h1 className="text-4xl font-bold mt-4">Your Name</h1>
         <p className="mt-2 text-lg text-gray-600">
           A passionate Full Stack Developer creating modern and responsive web applications.
         </p>
         <a
-          href="/resume.pdf" // public ফোল্ডারে আপনার resume.pdf ফাইলটি রাখুন
+          href="/resume.pdf" // public ফোল্ডারে আপনার resume.pdf রাখুন
           download
           className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-secondary transition-colors"
         >
@@ -189,39 +198,149 @@ export default async function HomePage() {
         </a>
       </section>
 
-      {/* Skills Section */}
+      {/* ✅ Skills Section */}
       <section>
         <h2 className="text-3xl font-bold text-center mb-8">My Skills</h2>
         <div className="flex justify-center flex-wrap gap-4">
-          {['JavaScript/TypeScript', 'Next.js', 'React', 'Node.js/Express.Js', 'MongoDB', 'Tailwind CSS'].map(skill => (
-            <span key={skill} className="bg-blue-400 text-gray-800 px-4 py-2 rounded-full font-medium">
+          {[
+            'JavaScript/TypeScript',
+            'Next.js',
+            'React',
+            'Node.js/Express.Js',
+            'MongoDB',
+            'Tailwind CSS',
+          ].map((skill) => (
+            <span
+              key={skill}
+              className="bg-blue-400 text-gray-800 px-4 py-2 rounded-full font-medium"
+            >
               {skill}
             </span>
           ))}
         </div>
       </section>
 
-      {/* Featured Projects Section */}
+      {/* ✅ Featured Projects Section (ISR Cache সহ) */}
       <section>
         <h2 className="text-3xl font-bold text-center mb-8">Featured Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredProjects.map(project => (
-            <ProjectCard key={project._id} project={project} />
-          ))}
-        </div>
-        <div className="text-center mt-8">
-  <Link
-    href="/projects"
-    className="inline-flex items-center gap-2 text-blue-600 hover:underline font-semibold"
-  >
-    View All Projects
-    <ArrowRight size={20} />
-  </Link>
-    </div>
-    </section>
-          <div>
-          <AnimatedCard />
+
+        {featuredProjects.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredProjects.map((project) => (
+              <ProjectCard key={project._id} project={project} />
+            ))}
           </div>
+        ) : (
+          <p className="text-center text-gray-500">No featured projects available.</p>
+        )}
+
+        <div className="text-center mt-8">
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-2 text-blue-600 hover:underline font-semibold"
+          >
+            View All Projects
+            <ArrowRight size={20} />
+          </Link>
+        </div>
+      </section>
+
+      {/* ✅ Animated Card */}
+      <div>
+        <AnimatedCard />
+      </div>
     </div>
   );
 }
+
+
+// import Link from 'next/link';
+// import Image from 'next/image';
+// import { ArrowRight } from 'lucide-react';
+// import { IProject } from '@/types';
+// import ProjectCard from '@/components/ProjectCard';
+// import AnimatedCard from "@/components/AnimatedCard";
+
+// // API থেকে ডেটা আনার ফাংশন
+// async function getFeaturedProjects(): Promise<IProject[]> {
+//   try {
+//     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects`, {
+//       cache: 'no-store', // ডেভেলপমেন্টের জন্য cache বন্ধ রাখা ভালো
+//     });
+//     if (!res.ok) {
+//       throw new Error('Failed to fetch projects');
+//     }
+//     const projects = await res.json();
+//     // এখানে আমরা প্রথম ৩টি প্রজেক্টকে ফিচারড হিসেবে দেখাব
+//     return projects.slice(0, 3);
+//   } catch (error) {
+//     console.error(error);
+//     return []; // এরর হলে খালি অ্যারে রিটার্ন করবে
+//   }
+// }
+
+// export default async function HomePage() {
+//   const featuredProjects = await getFeaturedProjects();
+
+//   return (
+//     <div className="space-y-16 py-2">
+//       {/* Hero Section */}
+//       <section className="text-center">
+//          <div className="w-36 h-36 rounded-full overflow-hidden mx-auto">
+//             <Image
+//               src="/images/profile.jpg"
+//               alt="Profile Picture"
+//               width={150}
+//               height={150}
+//               className="object-cover"
+//             />
+//          </div>
+//         <h1 className="text-4xl font-bold">Your Name</h1>
+//         <p className="mt-2 text-lg text-gray-600">
+//           A passionate Full Stack Developer creating modern and responsive web applications.
+//         </p>
+//         <a
+//           href="/resume.pdf" // public ফোল্ডারে আপনার resume.pdf ফাইলটি রাখুন
+//           download
+//           className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-secondary transition-colors"
+//         >
+//           Download Resume
+//         </a>
+//       </section>
+
+//       {/* Skills Section */}
+//       <section>
+//         <h2 className="text-3xl font-bold text-center mb-8">My Skills</h2>
+//         <div className="flex justify-center flex-wrap gap-4">
+//           {['JavaScript/TypeScript', 'Next.js', 'React', 'Node.js/Express.Js', 'MongoDB', 'Tailwind CSS'].map(skill => (
+//             <span key={skill} className="bg-blue-400 text-gray-800 px-4 py-2 rounded-full font-medium">
+//               {skill}
+//             </span>
+//           ))}
+//         </div>
+//       </section>
+
+//       {/* Featured Projects Section */}
+//       <section>
+//         <h2 className="text-3xl font-bold text-center mb-8">Featured Projects</h2>
+//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+//           {featuredProjects.map(project => (
+//             <ProjectCard key={project._id} project={project} />
+//           ))}
+//         </div>
+//         <div className="text-center mt-8">
+//   <Link
+//     href="/projects"
+//     className="inline-flex items-center gap-2 text-blue-600 hover:underline font-semibold"
+//   >
+//     View All Projects
+//     <ArrowRight size={20} />
+//   </Link>
+//     </div>
+//     </section>
+//           <div>
+//           <AnimatedCard />
+//           </div>
+//     </div>
+//   );
+// }
