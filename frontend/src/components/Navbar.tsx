@@ -1,6 +1,7 @@
+// frontend/src/components/Navbar.tsx
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import AuthActions from './AuthActions'; // নতুন কম্পোনেন্ট ইম্পোর্ট করুন
 
 export default async function Navbar() {
