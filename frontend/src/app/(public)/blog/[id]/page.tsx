@@ -53,12 +53,17 @@ async function getBlogDetails(id: string): Promise<IBlog | null> {
 /**
  * 🔹 Blog Details Page (ISR + SSG Hybrid)
  */
-export default async function BlogDetailsPage({ params }: { params: { id: string } }) {
-  const blog = await getBlogDetails(params.id);
+export default async function BlogDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params; // ✅ Next.js 15 এ params এখন Promise
+  const blog = await getBlogDetails(id);
 
   if (!blog) {
     return (
-      <div className="text-center text-red-500 py-10">
+      <div className="text-center text-red-500">
         Blog post not found or failed to load.
       </div>
     );
